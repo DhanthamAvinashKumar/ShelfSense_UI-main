@@ -1,0 +1,81 @@
+<div class="all-restock-tasks-container">
+  <h2>All Restock Tasks</h2>
+ 
+  <!-- Task ID Filter -->
+  <div class="filter-container">
+    <label for="taskIdFilter">Filter by Task ID:</label>
+    <input id="taskIdFilter" type="number" [(ngModel)]="taskIdFilter" placeholder="Enter Task ID" />
+  </div>
+ 
+  <!-- Table for Task ID Filter -->
+ 
+  <table *ngIf="!loading && filteredTasksById.length" class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Task ID</th>
+        <th>Product ID</th>
+        <th>Shelf ID</th>
+        <th>Assigned To</th>
+        <th>Assigned At</th>
+        <th>Status</th>
+        <th>Quantity Restocked</th>
+        <th>Completed At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of filteredTasksById">
+        <td>{{ task.taskId }}</td>
+        <td>{{ task.productId }}</td>
+        <td>{{ task.shelfId }}</td>
+        <td>{{ task.assignedTo }}</td>
+        <td>{{ task.assignedAt | date: 'short' }}</td>
+        <td [ngClass]="getStatusClass(task.status)">{{ task.status }}</td>
+        <td>{{ task.quantityRestocked }}</td>
+        <td>{{ task.completedAt | date: 'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && !filteredTasksById.length">No tasks found for Task ID.</div>
+ 
+  <!-- Status Filter -->
+  <div class="filter-container">
+    <label for="statusFilter">Filter by Status:</label>
+    <select id="statusFilter" [(ngModel)]="statusFilter">
+      <option value="">All</option>
+      <option value="pending">Pending</option>
+      <option value="completed">Completed</option>
+      <option value="delayed">Delayed</option>
+    </select>
+  </div>
+ 
+  <!-- Table for Status Filter -->
+ 
+  <table *ngIf="!loading && filteredTasksByStatus.length" class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Task ID</th>
+        <th>Product ID</th>
+        <th>Shelf ID</th>
+        <th>Assigned To</th>
+        <th>Assigned At</th>
+        <th>Status</th>
+        <th>Quantity Restocked</th>
+        <th>Completed At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of filteredTasksByStatus">
+        <td>{{ task.taskId }}</td>
+        <td>{{ task.productId }}</td>
+        <td>{{ task.shelfId }}</td>
+        <td>{{ task.assignedTo }}</td>
+        <td>{{ task.assignedAt | date: 'short' }}</td>
+        <td [ngClass]="getStatusClass(task.status)">{{ task.status }}</td>
+        <td>{{ task.quantityRestocked }}</td>
+        <td>{{ task.completedAt | date: 'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && !filteredTasksByStatus.length">No tasks found for Status.</div>
+</div>
+ 

@@ -1,0 +1,92 @@
+/*
+  Base Styles for Mobile (Default)
+*/
+.sidebar {
+  /* Initial state: hidden off-screen for mobile */
+  position: fixed;
+  top: 0;
+  left: -220px; /* Hide off-screen */
+  width: 220px;
+  background-color: #009688;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  color: white;
+  transition: left 0.3s ease-in-out; /* Smooth transition for opening/closing */
+  z-index: 1050; /* Ensure it's above other content */
+}
+
+/* Class to show the sidebar on mobile */
+.sidebar.open {
+  left: 0;
+}
+
+/* Mobile Toggler Button Styles */
+.mobile-toggler {
+  display: block; /* Visible by default on mobile */
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background-color: #009688;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  z-index: 1060; /* Above the sidebar */
+  border-radius: 4px;
+}
+
+/* Navigation Links and Submenu Styles */
+.nav a {
+  color: white;
+  padding: 0.5rem 1rem;
+  display: block;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.nav a.active,
+.nav a:hover {
+  background-color: #00796b;
+}
+
+.submenu {
+  list-style: none;
+  padding: 0;
+}
+
+/* Dropdown Icon Style and Rotation */
+.dropdown-icon {
+  float: right;
+  transition: transform 0.2s ease-in-out;
+}
+
+.dropdown-icon.rotate {
+  transform: rotate(90deg);
+}
+
+/* Action Buttons (Logout/Add Staff) */
+.action-buttons {
+  margin-top: auto;
+  padding-top: 1rem; /* Space from menu items */
+}
+
+/*
+  Media Query for Desktop/Tablet (768px and up)
+*/
+@media (min-width: 768px) {
+  /* Sidebar on Desktop */
+  .sidebar {
+    position: fixed; /* Keep it fixed */
+    left: 0; /* Always visible */
+    width: 220px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Hide the Mobile Toggler on Desktop */
+  .mobile-toggler {
+    display: none;
+  }
+}

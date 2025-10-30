@@ -1,0 +1,73 @@
+<div class="sidebar-container" *ngIf="!isWarehouse()">
+  <button class="mobile-toggler" (click)="toggleMobileMenu()">
+    <span *ngIf="!isMobileMenuOpen">&#9776; Menu</span>
+    <span *ngIf="isMobileMenuOpen">&#10005; Close</span>
+  </button>
+
+  <div class="sidebar" [class.open]="isMobileMenuOpen">
+    <h5 class="text-white text-center py-3">WELCOME</h5>
+    <ul class="nav flex-column">
+      <li *ngIf="isAdmin()"><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li *ngIf="isAdmin()"><a routerLink="/add-manager" routerLinkActive="active">Add Manager</a></li>
+
+      <li *ngIf="isAdmin() || isManager() || isStaff()">
+        <a (click)="toggleInventory()" class="nav-link">
+          ProductMapping <span class="dropdown-icon" [class.rotate]="showInventory">&#9658;</span>
+        </a>
+        <ul *ngIf="showInventory" class="nav flex-column ms-3 submenu">
+          <li><a routerLink="/add-product" routerLinkActive="active">Add Product</a></li>
+          <li><a routerLink="/product-shelf" routerLinkActive="active">ProductShelf</a></li>
+          <li><a routerLink="/add-category" routerLinkActive="active">Add Category</a></li>
+          <li><a routerLink="/add-shelf" routerLinkActive="active">Add Shelf</a></li>
+          <li><a routerLink="/shelf-metrics" routerLinkActive="active">Shelf_Metrics</a></li>
+        </ul>
+      </li>
+
+
+      <li *ngIf="isAdmin() || isManager() || isStaff()">
+        <a (click)="toggleInventory()" class="nav-link">
+          ReplenishmentAlerts <span class="dropdown-icon" [class.rotate]="showInventory">&#9658;</span>
+        </a>
+        <ul *ngIf="showInventory" class="nav flex-column ms-3 submenu">
+          <li class="nav-item">
+        <a class="nav-link" routerLink="/predict-depletion" routerLinkActive="active">
+          Predict Depletion
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/replenishment-alerts" routerLinkActive="active">Replenishment Alerts</a>
+      </li>
+        </ul>
+      </li>
+
+      <li *ngIf="isAdmin() || isManager() || isStaff()">
+        <a (click)="toggleStockRequest()" class="nav-link">
+          Stock Request <span class="dropdown-icon" [class.rotate]="showStockRequest">&#9658;</span>
+        </a>
+        <ul *ngIf="showStockRequest" class="nav flex-column ms-3 submenu">
+          <li><a routerLink="/create-request-alert" routerLinkActive="active">Create Request from Alert</a></li>
+          <li><a routerLink="/all-requests" routerLinkActive="active">All Requests</a></li>
+          <li><a routerLink="/delivery-log" routerLinkActive="active">Delivery Log Status</a></li>
+        </ul>
+      </li>
+
+      <!-- RestockTask menu -->
+      <li *ngIf="isAdmin() || isManager() || isStaff()">
+        <a (click)="toggleRestockTaskMenu()" class="nav-link">
+          RestockTask <span class="dropdown-icon" [class.rotate]="showRestockTaskMenu">&#9658;</span>
+        </a>
+        <ul *ngIf="showRestockTaskMenu" class="nav flex-column ms-3 submenu">
+          <li><a routerLink="/assign-tasks" routerLinkActive="active">AssignTasks</a></li>
+          <li><a routerLink="/all-restock-tasks" routerLinkActive="active">AllRestockTasks</a></li>
+          <li><a routerLink="/organize-products" routerLinkActive="active">OrganizeProducts</a></li>
+        </ul>
+      </li>
+ 
+    </ul>
+
+    <div class="action-buttons mt-auto text-center">
+      <button *ngIf="isAdmin() || isManager()" class="btn btn-outline-light w-100 mb-2" (click)="goToRegister()">Add Staff</button>
+      <button class="btn btn-danger w-100" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</div>

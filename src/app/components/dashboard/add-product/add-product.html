@@ -1,0 +1,98 @@
+
+<div class="product-form">
+  <h4><i class="fas fa-box-open me-2"></i> {{ isEditMode ? 'Edit Product' : 'Add New Product' }}</h4>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label><i class="fas fa-barcode me-2"></i> Stock Keeping Unit</label>
+      <input type="text" formControlName="stockKeepingUnit" />
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-tag me-2"></i> Product Name</label>
+      <input type="text" formControlName="productName" />
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-layer-group me-2"></i> Category ID</label>
+      <input type="number" formControlName="categoryId" />
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-boxes me-2"></i> Package Size</label>
+      <input type="text" formControlName="packageSize" />
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-balance-scale me-2"></i> Unit</label>
+      <input type="text" formControlName="unit" />
+    </div>
+
+    <button type="submit" [disabled]="productForm.invalid">
+      <i class="fas fa-plus-circle me-2"></i>
+      {{ isEditMode ? 'Update Product' : 'Add Product' }}
+    </button>
+
+    <button *ngIf="isEditMode" type="button" class="btn-cancel" (click)="resetForm()">Cancel</button>
+  </form>
+</div>
+
+<!-- Product Table -->
+<div class="category-table-container">
+  <div class="table-header-bar">
+    <h5>Existing Products</h5>
+    <button class="btn-load" (click)="loadProducts()" [disabled]="isLoadingProducts">
+      <span *ngIf="!isLoadingProducts">Reload Products ({{ products?.length || 0 }})</span>
+      <span *ngIf="isLoadingProducts"><i class="fas fa-spinner fa-spin me-2"></i> Loading...</span>
+    </button>
+  </div>
+
+  <table class="category-table" *ngIf="products && products.length > 0 && !isLoadingProducts">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>SKU</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Package</th>
+        <th>Unit</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td>{{ p.productId }}</td>
+        <td>{{ p.stockKeepingUnit }}</td>
+        <td>{{ p.productName }}</td>
+        <td>{{ p.categoryId }}</td>
+        <td>{{ p.packageSize || '—' }}</td>
+        <td>{{ p.unit || '—' }}</td>
+        <td>
+          <button class="btn-edit" (click)="openEditModal(p)">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn-delete" (click)="openDeleteModal(p.productId, p.productName)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="products?.length === 0 && !isLoadingProducts" class="alert alert-info mt-3">
+    No products found. Click <strong>"Reload Products"</strong> to fetch data.
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showDeleteModal">
+  <div class="modal-content delete-modal-content">
+    <h4>Confirm Deletion</h4>
+    <p>Are you sure you want to delete product <strong>{{ pendingDeleteName }}</strong>?</p>
+    <p class="text-danger small">This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn-confirm" (click)="confirmDelete()">Yes, Delete</button>
+      <button class="btn-cancel" (click)="cancelDelete()">Cancel</button>
+    </div>
+  </div>
+</div>
