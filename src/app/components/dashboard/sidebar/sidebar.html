@@ -1,73 +1,89 @@
 <div class="sidebar-container" *ngIf="!isWarehouse()">
-  <button class="mobile-toggler" (click)="toggleMobileMenu()">
-    <span *ngIf="!isMobileMenuOpen">&#9776; Menu</span>
-    <span *ngIf="isMobileMenuOpen">&#10005; Close</span>
-  </button>
+  <!-- Sidebar toggle button -->
+  <div class="sidebar-toggle">
+    <button class="toggle-btn" (click)="toggleSidebar.emit()">
+      <span *ngIf="isExpanded">&#x276E;</span>
+      <span *ngIf="!isExpanded">&#x276F;</span>
+    </button>
+  </div>
 
-  <div class="sidebar" [class.open]="isMobileMenuOpen">
-    <h5 class="text-white text-center py-3">WELCOME</h5>
+  <!-- Sidebar content wrapper -->
+  <div class="sidebar-content">
     <ul class="nav flex-column">
-      <li *ngIf="isAdmin()"><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
-      <li *ngIf="isAdmin()"><a routerLink="/add-manager" routerLinkActive="active">Add Manager</a></li>
-
+      <!-- Product Mapping -->
       <li *ngIf="isAdmin() || isManager() || isStaff()">
-        <a (click)="toggleInventory()" class="nav-link">
-          ProductMapping <span class="dropdown-icon" [class.rotate]="showInventory">&#9658;</span>
+        <a (click)="toggleInventory()" class="nav-link" title="Product Mapping">
+          🗂 <span class="label" *ngIf="isExpanded">ProductMapping</span>
         </a>
-        <ul *ngIf="showInventory" class="nav flex-column ms-3 submenu">
+        <ul *ngIf="showInventory && isExpanded" class="nav flex-column ms-3 submenu show">
           <li><a routerLink="/add-product" routerLinkActive="active">Add Product</a></li>
           <li><a routerLink="/product-shelf" routerLinkActive="active">ProductShelf</a></li>
           <li><a routerLink="/add-category" routerLinkActive="active">Add Category</a></li>
           <li><a routerLink="/add-shelf" routerLinkActive="active">Add Shelf</a></li>
-          <li><a routerLink="/shelf-metrics" routerLinkActive="active">Shelf_Metrics</a></li>
+          <li><a routerLink="/shelf-metrics" routerLinkActive="active">Shelf Metrics</a></li>
         </ul>
       </li>
 
-
+      <!-- Alerts -->
       <li *ngIf="isAdmin() || isManager() || isStaff()">
-        <a (click)="toggleInventory()" class="nav-link">
-          ReplenishmentAlerts <span class="dropdown-icon" [class.rotate]="showInventory">&#9658;</span>
+        <a (click)="toggleAlerts()" class="nav-link" title="Alerts">
+          🔔 <span class="label" *ngIf="isExpanded">Alerts</span>
         </a>
-        <ul *ngIf="showInventory" class="nav flex-column ms-3 submenu">
-          <li class="nav-item">
-        <a class="nav-link" routerLink="/predict-depletion" routerLinkActive="active">
-          Predict Depletion
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/replenishment-alerts" routerLinkActive="active">Replenishment Alerts</a>
-      </li>
+        <ul *ngIf="showAlerts && isExpanded" class="nav flex-column ms-3 submenu show">
+          <li><a routerLink="/predict-depletion" routerLinkActive="active">Predict Depletion</a></li>
+          <li><a routerLink="/replenishment-alerts" routerLinkActive="active">Replenishment Alerts</a></li>
         </ul>
       </li>
 
+      <!-- Stock Request -->
       <li *ngIf="isAdmin() || isManager() || isStaff()">
-        <a (click)="toggleStockRequest()" class="nav-link">
-          Stock Request <span class="dropdown-icon" [class.rotate]="showStockRequest">&#9658;</span>
+        <a (click)="toggleStockRequest()" class="nav-link" title="Stock Request">
+          📦 <span class="label" *ngIf="isExpanded">Stock Request</span>
         </a>
-        <ul *ngIf="showStockRequest" class="nav flex-column ms-3 submenu">
+        <ul *ngIf="showStockRequest && isExpanded" class="nav flex-column ms-3 submenu show">
           <li><a routerLink="/create-request-alert" routerLinkActive="active">Create Request from Alert</a></li>
           <li><a routerLink="/all-requests" routerLinkActive="active">All Requests</a></li>
           <li><a routerLink="/delivery-log" routerLinkActive="active">Delivery Log Status</a></li>
         </ul>
       </li>
 
-      <!-- RestockTask menu -->
+      <!-- Restock Task -->
       <li *ngIf="isAdmin() || isManager() || isStaff()">
-        <a (click)="toggleRestockTaskMenu()" class="nav-link">
-          RestockTask <span class="dropdown-icon" [class.rotate]="showRestockTaskMenu">&#9658;</span>
+        <a (click)="toggleRestockTaskMenu()" class="nav-link" title="Restock Tasks">
+          🔄 <span class="label" *ngIf="isExpanded">RestockTask</span>
         </a>
-        <ul *ngIf="showRestockTaskMenu" class="nav flex-column ms-3 submenu">
-          <li><a routerLink="/assign-tasks" routerLinkActive="active">AssignTasks</a></li>
-          <li><a routerLink="/all-restock-tasks" routerLinkActive="active">AllRestockTasks</a></li>
-          <li><a routerLink="/organize-products" routerLinkActive="active">OrganizeProducts</a></li>
+        <ul *ngIf="showRestockTaskMenu && isExpanded" class="nav flex-column ms-3 submenu show">
+          <li><a routerLink="/assign-tasks" routerLinkActive="active">Assign Tasks</a></li>
+          <li><a routerLink="/all-restock-tasks" routerLinkActive="active">All Restock Tasks</a></li>
+          <li><a routerLink="/organize-products" routerLinkActive="active">Organize Products</a></li>
         </ul>
       </li>
- 
-    </ul>
 
-    <div class="action-buttons mt-auto text-center">
-      <button *ngIf="isAdmin() || isManager()" class="btn btn-outline-light w-100 mb-2" (click)="goToRegister()">Add Staff</button>
-      <button class="btn btn-danger w-100" (click)="logout()">Logout</button>
+      <!-- Staff Management -->
+      <li *ngIf="isAdmin() || isManager()">
+        <a (click)="toggleStaffMenu()" class="nav-link" title="Staff Management">
+          👥 <span class="label" *ngIf="isExpanded">Staff Management</span>
+        </a>
+        <ul *ngIf="showStaffMenu && isExpanded" class="nav flex-column ms-3 submenu show">
+          <li><a routerLink="/register" routerLinkActive="active">Add Staff</a></li>
+          <li><a routerLink="/view-staff" routerLinkActive="active">View Staff</a></li>
+        </ul>
+      </li>
+
+      <li *ngIf="isAdmin() || isManager() || isStaff()">
+          <a routerLink="/inventory-report" class="nav-link" title="Inventory Report">
+            📊 <span class="label" *ngIf="isExpanded">Inventory Report</span>
+          </a>
+      </li>
+
+    </ul> <br><br><br><br><br><br><br><br><br><br>
+
+    <!-- Logout button pinned to bottom -->
+    <div class="action-buttons text-center">
+      <button class="btn btn-danger w-100" (click)="logout()" title="Logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="label" *ngIf="isExpanded">Logout</span>
+      </button>
     </div>
   </div>
 </div>

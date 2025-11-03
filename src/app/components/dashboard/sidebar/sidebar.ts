@@ -1,5 +1,5 @@
-import { Component, HostListener } from '@angular/core'; // Import HostListener
-import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
@@ -11,30 +11,18 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./sidebar.css']
 })
 export class Sidebar {
+  @Input() isExpanded = true;
+  @Output() toggleSidebar = new EventEmitter<void>();
+
   showInventory = false;
   showStockRequest = false;
-  isMobileMenuOpen = false;
+  showAlerts = false;
+  showStaffMenu = false;
   showRestockTaskMenu = false;
   role: string | null = null;
-  private mobileBreakpoint = 768; // Define the breakpoint
 
   constructor(private auth: AuthService, private router: Router) {
     this.role = this.auth.getUserRole();
-
-    // Close mobile menu on route change if on mobile
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd && window.innerWidth < this.mobileBreakpoint) {
-        this.isMobileMenuOpen = false;
-      }
-    });
-  }
-
-  // A HostListener to close the mobile menu if the window is resized to desktop
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    if (event.target.innerWidth > this.mobileBreakpoint) {
-      this.isMobileMenuOpen = false;
-    }
   }
 
   toggleInventory() {
@@ -45,13 +33,16 @@ export class Sidebar {
     this.showStockRequest = !this.showStockRequest;
   }
 
-  toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  toggleAlerts() {
+    this.showAlerts = !this.showAlerts;
   }
-
 
   toggleRestockTaskMenu() {
     this.showRestockTaskMenu = !this.showRestockTaskMenu;
+  }
+
+  toggleStaffMenu() {
+    this.showStaffMenu = !this.showStaffMenu;
   }
 
   isAdmin() {
@@ -68,10 +59,6 @@ export class Sidebar {
 
   isWarehouse() {
     return this.role === 'warehouse';
-  }
-
-  goToRegister() {
-    this.router.navigate(['/register']);
   }
 
   logout() {

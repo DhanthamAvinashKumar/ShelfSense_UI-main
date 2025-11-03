@@ -71,7 +71,7 @@ export class Login implements OnInit {
               case 'admin':
               case 'manager':
               case 'staff':
-                this.router.navigate(['/landing']);
+                this.router.navigate(['/home']);
                 break;
               case 'warehouse':
                 this.router.navigate(['/warehouse-dashboard']);
@@ -105,5 +105,5 @@ export class Login implements OnInit {
     return this.loginForm.controls;
   }
 
-  
+
 }
