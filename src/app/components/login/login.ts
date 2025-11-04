@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
@@ -20,11 +20,30 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.css']
 })
 export class Login implements OnInit {
-  loginForm;
+  loginForm: FormGroup<{
+    email: FormControl<string>;
+    password: FormControl<string>;
+  }>;
+
   isLoadingOverlay = false;
   showPassword = false;
-  showSplash = true; // ✅ splash screen toggle
+  showSplash = true;
   showLoginForm = false;
+
+  gradientStyle: { [key: string]: string } = {
+    ['background']: 'radial-gradient(circle at center, #e8f5e9, #c8e6c9, #a5d6a7)',
+    ['min-height']: '100vh',
+    ['display']: 'flex',
+    ['justify-content']: 'center',
+    ['align-items']: 'center'
+  };
+
+  private gradientColors = [
+    'radial-gradient(circle at center, #e8f5e9, #c8e6c9, #a5d6a7)',
+    'radial-gradient(circle at center, #fff3e0, #ffe0b2, #ffcc80)',
+    'radial-gradient(circle at center, #e3f2fd, #bbdefb, #90caf9)',
+    'radial-gradient(circle at center, #fce4ec, #f8bbd0, #f48fb1)'
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -33,35 +52,41 @@ export class Login implements OnInit {
     private toastr: ToastrService
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      email: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+      password: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.minLength(6)] })
     });
   }
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     setTimeout(() => {
       this.showSplash = false;
-      this.showLoginForm = true; // ✅ trigger login form animation
-    }, 2500); // matches splash animation duration
+      this.showLoginForm = true;
+    }, 2500);
+
+    let index = 0;
+    setInterval(() => {
+      this.gradientStyle['background'] = this.gradientColors[index];
+      index = (index + 1) % this.gradientColors.length;
+    }, 3000);
   }
 
-  togglePasswordVisibility() {
+  togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.valid) {
       this.isLoadingOverlay = true;
+      const { email, password } = this.loginForm.getRawValue();
 
-      const credentials = {
-        email: this.loginForm.get('email')!.value!,
-        password: this.loginForm.get('password')!.value!
-      };
-
-      this.authService.login(credentials).subscribe({
+      this.authService.login({ email, password }).subscribe({
         next: (res) => {
           this.authService.storeToken(res.token);
           this.authService.storeRefreshToken(res.refreshToken);
+          this.authService.startTokenMonitor(
+            () => this.toastr.info('⚠️ Session expiring soon!', 'Heads up'),
+            () => window.location.reload()
+          );
 
           const role = this.authService.getUserRole()?.toLowerCase();
           this.toastr.success(`Welcome back! Role: ${role}`, 'Login Successful');
@@ -86,7 +111,7 @@ export class Login implements OnInit {
             this.isLoadingOverlay = false;
           }, 1000);
         },
-        error: (err: { error: { message: any } }) => {
+        error: (err) => {
           this.toastr.error(err.error?.message || 'Login failed. Try again.', 'Error');
           this.isLoadingOverlay = false;
         }
@@ -104,6 +129,4 @@ export class Login implements OnInit {
   get f() {
     return this.loginForm.controls;
   }
-
-
 }

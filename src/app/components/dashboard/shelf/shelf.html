@@ -1,18 +1,18 @@
 <!-- 🌿 Shelf Form -->
 <div class="shelf-form">
   <h4><i class="fas fa-warehouse me-2"></i> {{ isEditMode ? 'Edit Shelf' : 'Add New Shelf' }}</h4>
- 
+
   <form [formGroup]="shelfForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="shelfCode">Shelf Code</label>
       <input type="text" id="shelfCode" formControlName="shelfCode" />
     </div>
- 
+
     <div class="form-group">
       <label for="storeId">Store ID</label>
       <input type="number" id="storeId" formControlName="storeId" />
     </div>
- 
+
     <div class="form-group">
       <label for="categoryId">Category</label>
       <select id="categoryId" formControlName="categoryId">
@@ -20,17 +20,17 @@
         <option *ngFor="let c of categories" [ngValue]="c.categoryId">{{ c.categoryName }}</option>
       </select>
     </div>
- 
+
     <div class="form-group">
       <label for="locationDescription">Location Description</label>
       <input type="text" id="locationDescription" formControlName="locationDescription" />
     </div>
- 
+
     <div class="form-group">
       <label for="capacity">Capacity</label>
       <input type="number" id="capacity" formControlName="capacity" />
     </div>
- 
+
     <!-- Image upload field for shelf -->
     <div class="form-group">
       <label>Shelf Image (optional)</label>
@@ -41,7 +41,7 @@
         <img [src]="selectedImagePreview" alt="Selected Image Preview" class="preview-thumb" />
       </div>
     </div>
- 
+
     <div class="form-actions">
       <button type="submit" [disabled]="shelfForm.invalid || isSubmitting">
         <span *ngIf="isSubmitting"><i class="fas fa-spinner fa-spin me-2"></i> Saving...</span>
@@ -51,7 +51,7 @@
     </div>
   </form>
 </div>
- 
+
 <!-- 🔍 Filter Bar -->
 <div class="filter-bar-wrapper">
   <div class="filter-bar">
@@ -70,17 +70,17 @@
     </div>
   </div>
 </div>
- 
+
 <!-- 📊 Shelf Table -->
 <div class="category-table-container">
   <div class="table-header-bar">
     <h5>Existing Shelves ({{ filteredShelves.length }} total)</h5>
     <button class="btn-load" (click)="loadShelves()" [disabled]="isLoadingShelves">
-      <span *ngIf="!isLoadingShelves">Reload Shelves</span>
+      <span *ngIf="!isLoadingShelves">Load Shelves</span>
       <span *ngIf="isLoadingShelves"><i class="fas fa-spinner fa-spin me-2"></i> Loading...</span>
     </button>
   </div>
- 
+
   <table class="category-table" *ngIf="paginatedShelves.length > 0 && !isLoadingShelves">
     <thead>
       <tr>
@@ -132,11 +132,11 @@
       </tr>
     </tbody>
   </table>
- 
+
   <div *ngIf="paginatedShelves.length === 0 && !isLoadingShelves" class="alert alert-info mt-3">
     No matching shelves found.
   </div>
- 
+
   <!-- ➡️ Pagination Controls -->
   <div class="pagination-controls" *ngIf="filteredShelves.length > pageSize">
     <div class="page-size-selector">
@@ -147,7 +147,7 @@
         <option [value]="20">20</option>
       </select>
     </div>
- 
+
     <div class="pagination-buttons">
       <button class="btn-page" (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
       <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
@@ -155,7 +155,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- 🧨 Delete Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showDeleteModal">
   <div class="modal-content delete-modal-content">
@@ -168,5 +168,4 @@
     </div>
   </div>
 </div>
- 
- 
+

@@ -1,7 +1,7 @@
 <!-- 🌿 Auto-Assign / Edit Form -->
 <div class="product-form">
   <h4><i class="fas fa-magic me-2"></i> {{ isEditMode ? 'Edit Mapping' : 'Auto-Assign Product to Shelf' }}</h4>
- 
+
   <form [formGroup]="mappingForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label><i class="fas fa-box me-2"></i> Product</label>
@@ -10,7 +10,7 @@
         <option *ngFor="let p of products" [ngValue]="p.productId">{{ p.productName }}</option>
       </select>
     </div>
- 
+
     <div class="form-group" *ngIf="isEditMode">
       <label><i class="fas fa-layer-group me-2"></i> Shelf</label>
       <select formControlName="shelfId">
@@ -18,7 +18,7 @@
         <option *ngFor="let s of shelves" [ngValue]="s.shelfId || s.id">{{ s.shelfName || s.name || s.label || (s.shelfId || s.id) }}</option>
       </select>
     </div>
- 
+
     <div class="form-group" *ngIf="!isEditMode">
       <label><i class="fas fa-layer-group me-2"></i> Category</label>
       <select formControlName="categoryId">
@@ -26,17 +26,17 @@
         <option *ngFor="let c of categories" [ngValue]="c.categoryId">{{ c.categoryName }}</option>
       </select>
     </div>
- 
+
     <div class="form-group">
       <label><i class="fas fa-sort-numeric-up me-2"></i> Quantity</label>
       <input type="number" formControlName="initialQuantity" placeholder="Enter Quantity" />
     </div>
- 
+
     <div class="form-group">
       <label><i class="fas fa-warehouse me-2"></i> Max Capacity</label>
       <input type="number" formControlName="maxCapacity" placeholder="Enter Max Capacity" />
     </div>
- 
+
     <div class="form-actions">
       <button type="submit" [disabled]="mappingForm.invalid || isSubmitting">
         <span *ngIf="isSubmitting"><i class="fas fa-spinner fa-spin me-2"></i> {{ isEditMode ? 'Updating...' : 'Assigning...' }}</span>
@@ -46,7 +46,7 @@
     </div>
   </form>
 </div>
- 
+
 <!-- 🔍 Filter Bar -->
 <div class="filter-bar-wrapper">
   <div class="filter-bar">
@@ -65,17 +65,17 @@
     </div>
   </div>
 </div>
- 
+
 <!-- 📊 Mapping Table -->
 <div class="category-table-container">
   <div class="table-header-bar">
     <h5>Product Shelf Mappings ({{ filteredMappings.length }} total)</h5>
     <button class="btn-load" (click)="loadMappings()" [disabled]="isLoading">
-      <span *ngIf="!isLoading">Reload Mappings</span>
+      <span *ngIf="!isLoading">Load Mappings</span>
       <span *ngIf="isLoading"><i class="fas fa-spinner fa-spin me-2"></i> Loading...</span>
     </button>
   </div>
- 
+
   <table class="category-table" *ngIf="paginatedMappings.length > 0 && !isLoading">
     <thead>
       <tr>
@@ -149,11 +149,11 @@
       </tr>
     </tbody>
   </table>
- 
+
   <div *ngIf="paginatedMappings.length === 0 && !isLoading" class="alert-info mt-3">
     No matching mappings found.
   </div>
- 
+
   <!-- ➡️ Pagination Controls -->
   <div class="pagination-controls" *ngIf="filteredMappings.length > pageSize">
     <div class="page-size-selector">
@@ -164,7 +164,7 @@
         <option [value]="20">20</option>
       </select>
     </div>
- 
+
     <div class="pagination-buttons">
       <button class="btn-page" (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
       <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
@@ -172,7 +172,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- 🧨 Delete Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showDeleteModal">
   <div class="modal-content delete-modal-content">
@@ -185,5 +185,4 @@
     </div>
   </div>
 </div>
- 
- 
+
